@@ -16,14 +16,20 @@ class MytheresaSpider(scrapy.Spider):
         for url in product_urls:
             if url not in seen_urls:
                 seen_urls.add(url)
-                yield {
-                    'product_url': response.urljoin(url)
-                }
+                # yield {
+                #     'product_url': response.urljoin(url)
+                # } 
+                yield response.follow(url, callback=self.parse_product)
 
         #Handle Pagination
         next_page = response.css('a.pagination__item.pagination__item__icon.icon__next.pagination__item.pagination__item__icon.icon__next--active::attr(href)').get()
         if next_page:
             yield response.follow(next_page, callback=self.parse)
 
+    def parse_product(self, response):
+        item = {
+            'breadcrumbs': response.css('div.breadcrumb__item a::text').getall()
+        }
+        yield item
         
 
