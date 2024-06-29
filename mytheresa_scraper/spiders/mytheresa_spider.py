@@ -36,16 +36,34 @@ class MytheresaSpider(scrapy.Spider):
             'offer_price': response.css('span.pricing__prices__value--discount span.pricing__prices__price::text').get(),
             'discount': response.css('span.pricing__info__percentage::text').get(),
             'product_id': self.extract_item_number(response),
-            'sizes': response.css('div.sizeitem span.sizeitem__label::text').getall()
-
-
+            'sizes': response.css('div.sizeitem span.sizeitem__label::text').getall(),
+            'description': self.extract_description(response),
+            'other_images': self.extract_other_images(response)
         }
+       
         yield item
 
     def extract_item_number(self, response):
         # Locate item number 
         item_number = response.css('div.accordion__body__content ul li').re_first(r'Item number:\s*(\w+)')
         return item_number
+    
+    def extract_description(self, response):
+        # Extract description from the accordion__body__content, excluding item number
+        description_items = response.css('div.accordion__body__content ul li::text').getall()
+        description = ' '.join(description_items).replace(self.extract_item_number(response), '').strip()
+        return description
+    
+    def extract_other_images(self, response):
+        main_image_url = response.css('div.photocarousel__items img.product__gallery__carousel__image::attr(src)').get()
+        other_images = response.css('div.swiper-wrapper div.swiper-slide img.product__gallery__carousel__image::attr(src)').getall()
+        
+        # Remove duplicates and exclude main image
+        unique_images = list(set(other_images) - set([main_image_url])) if main_image_url else list(set(other_images))
+        
+        return unique_images
+    
+    
     
    
 
