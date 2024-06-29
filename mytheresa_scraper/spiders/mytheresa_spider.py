@@ -29,7 +29,9 @@ class MytheresaSpider(scrapy.Spider):
     def parse_product(self, response):
         item = {
             'breadcrumbs': response.css('div.breadcrumb__item a::text').getall(),
-            'image_url': response.css('div.photocarousel__items img.product__gallery__carousel__image::attr(src)').get() 
+            'image_url': response.css('div.photocarousel__items img.product__gallery__carousel__image::attr(src)').get(),
+            'brand': response.css('div.product__area__branding__designer a::text').get(),
+            'product_name': response.css('div.product__area__branding__name::text').get()
 
         }
         yield item
