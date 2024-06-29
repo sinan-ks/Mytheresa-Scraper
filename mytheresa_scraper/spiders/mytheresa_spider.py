@@ -31,9 +31,19 @@ class MytheresaSpider(scrapy.Spider):
             'breadcrumbs': response.css('div.breadcrumb__item a::text').getall(),
             'image_url': response.css('div.photocarousel__items img.product__gallery__carousel__image::attr(src)').get(),
             'brand': response.css('div.product__area__branding__designer a::text').get(),
-            'product_name': response.css('div.product__area__branding__name::text').get()
+            'product_name': response.css('div.product__area__branding__name::text').get(),
+            'listing_price': response.css('span.pricing__prices__value--original span.pricing__prices__price::text').get(),
+            'offer_price': response.css('span.pricing__prices__value--discount span.pricing__prices__price::text').get(),
+            'discount': response.css('span.pricing__info__percentage::text').get(),
+            'product_id': self.extract_item_number(response)
+
 
         }
         yield item
+
+    def extract_item_number(self, response):
+        # Locate item number 
+        item_number = response.css('div.accordion__body__content ul li').re_first(r'Item number:\s*(\w+)')
+        return item_number
         
 
