@@ -100,11 +100,4 @@ FEEDS = {
         'indent': 4,
         'overwrite': True,
     }
-    # ,
-    # 'mytheresa_shoes_data.csv': {
-    #     'format': 'csv',
-    #     'encoding': 'utf8',
-    #     'store_empty': False,
-    #     'overwrite': True,
-    # }
 }
