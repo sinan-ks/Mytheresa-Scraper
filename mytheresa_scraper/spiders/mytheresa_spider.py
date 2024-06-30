@@ -2,10 +2,6 @@ import scrapy
 
 class MytheresaSpider(scrapy.Spider):
     name = 'mytheresa'
-    custom_settings = {
-        'ROBOTSTXT_OBEY': False,
-        'DOWNLOAD_DELAY': 1  
-    }
     allowed_domains = ["mytheresa.com"]
     start_urls = ['https://www.mytheresa.com/int_en/men/shoes.html']
 
